@@ -7,7 +7,6 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'method_not_allowed' });
 
   try {
-    await initDB();
     const { email, password, deviceId, deviceName } = req.body;
 
     if (!email || !password) {
@@ -33,6 +32,8 @@ module.exports = async function handler(req, res) {
         }
       });
     }
+
+    await initDB();
 
     // ユーザー検索
     const userResult = await sql`SELECT * FROM users WHERE email = ${email.toLowerCase().trim()}`;
