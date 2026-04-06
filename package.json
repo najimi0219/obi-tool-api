@@ -1,0 +1,17 @@
+{
+  "name": "obi-tool-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "db:setup": "node scripts/setup-db.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "stripe": "^14.14.0",
+    "@vercel/postgres": "^0.10.0",
+    "uuid": "^9.0.1"
+  }
+}

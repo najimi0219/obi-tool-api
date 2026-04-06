@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お支払いキャンセル - Obi-Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      padding: 2rem;
+    }
+    .card {
+      max-width: 480px; width: 100%;
+      background: #fff;
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: fadeUp 0.5s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 8px 30px rgba(245,158,11,0.3);
+    }
+    .icon svg { width: 40px; height: 40px; }
+    h1 { font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; }
+    p { color: #475569; font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem; }
+    .info-box {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: 12px; padding: 1.25rem;
+      margin-bottom: 2rem; text-align: left;
+    }
+    .info-box p { color: #92400e; font-size: 0.85rem; margin-bottom: 0; line-height: 1.7; }
+    .actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: 12px;
+      font-size: 0.95rem; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(37,99,235,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(37,99,235,0.4); }
+    .btn-ghost {
+      background: #f1f5f9; color: #475569;
+    }
+    .btn-ghost:hover { background: #e2e8f0; }
+    .sub-text { margin-top: 1.5rem; font-size: 0.8rem; color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <h1>お支払いがキャンセルされました</h1>
+    <p>決済手続きが完了しませんでした。ご安心ください、料金は発生していません。</p>
+    <div class="info-box">
+      <p>無料トライアル期間中は引き続き全機能をご利用いただけます。いつでもプランにアップグレードできますので、ご準備ができましたら再度お試しください。</p>
+    </div>
+    <div class="actions">
+      <a href="/" class="btn btn-primary">トップページに戻る</a>
+      <a href="/#pricing" class="btn btn-ghost">料金プランを確認</a>
+    </div>
+    <p class="sub-text">ご不明点は info@najimi-llc.com までお問い合わせください</p>
+  </div>
+</body>
+</html>
