@@ -49,6 +49,6 @@ module.exports = async function handler(req, res) {
     });
   } catch (e) {
     console.error('Register error:', e);
-    return res.status(500).json({ success: false, error: 'server_error', message: 'サーバーエラーが発生しました', debug: e.message });
+    return res.status(500).json({ success: false, error: 'server_error', message: 'サーバーエラーが発生しました' });
   }
 };
