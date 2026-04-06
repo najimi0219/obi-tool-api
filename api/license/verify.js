@@ -6,7 +6,6 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'method_not_allowed' });
 
   try {
-    await initDB();
     const { token, deviceId } = req.body;
 
     // ===== 管理者アカウント: 常に有効・制限なし =====
@@ -24,6 +23,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    await initDB();
     const user = await getUserFromToken(token);
     if (!user) {
       return res.status(401).json({ success: false, error: 'invalid_token' });
