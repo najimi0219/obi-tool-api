@@ -65,7 +65,8 @@ module.exports = async function handler(req, res) {
     }
 
     // サブスク期限（Stripeのwebhookで更新されるが、念のためチェック）
-    if (license.status === 'active' && license.current_period_end) {
+    // canceling = 解約予約済み（期間終了まではactive扱い）
+    if ((license.status === 'active' || license.status === 'canceling') && license.current_period_end) {
       if (now > new Date(license.current_period_end)) {
         // Stripeに問い合わせてステータスを同期すべきだが、
         // webhookで処理されるはずなのでここでは past_due にする

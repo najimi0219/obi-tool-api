@@ -14,6 +14,22 @@ async function buffer(readable) {
   return Buffer.concat(chunks);
 }
 
+// サブスクリプションのクーポン情報からプラン名を判定
+function determinePlan(sub) {
+  if (sub.discount && sub.discount.coupon) {
+    const coupon = sub.discount.coupon;
+    // 100%オフ = VIP（出資者向け無料）
+    if (coupon.percent_off === 100) {
+      return 'vip';
+    }
+    // 金額割引あり = FRIENDS（紹介割引）
+    if (coupon.amount_off > 0 || coupon.percent_off > 0) {
+      return 'friends';
+    }
+  }
+  return 'standard';
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -40,11 +56,14 @@ module.exports = async function handler(req, res) {
         if (userId && subscriptionId) {
           // サブスク情報を取得
           const sub = await stripe.subscriptions.retrieve(subscriptionId);
+          // プラン判定（クーポンの割引内容で分類）
+          const plan = determinePlan(sub);
           await sql`
             UPDATE licenses
             SET stripe_sub = ${subscriptionId},
                 stripe_customer = ${session.customer},
                 status = ${sub.status === 'trialing' ? 'trial' : 'active'},
+                plan = ${plan},
                 current_period_end = ${new Date(sub.current_period_end * 1000).toISOString()},
                 trial_end = ${sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null}
             WHERE user_id = ${userId}
@@ -60,11 +79,8 @@ module.exports = async function handler(req, res) {
         let status = sub.status;
         if (status === 'trialing') status = 'trial';
 
-        // キャンペーン判定（クーポン適用中か）
-        let plan = 'standard';
-        if (sub.discount && sub.discount.coupon) {
-          plan = 'campaign';
-        }
+        // プラン判定（クーポンの割引内容で分類）
+        const plan = determinePlan(sub);
 
         await sql`
           UPDATE licenses
