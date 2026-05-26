@@ -49,21 +49,32 @@ module.exports = async function handler(req, res) {
 
     // サブスクリプションがあるか確認
     if (!license.stripe_sub) {
-      // まだサブスク開始前（トライアル中）→ DBにプロモコードを保存しておき、チェックアウト時に適用
-      await sql`UPDATE licenses SET promo_code = ${promoCode.toUpperCase()} WHERE id = ${license.id}`;
+      // まだサブスク開始前（トライアル中）→ プロモコード保存 + プラン即時変更
+      let newPlan = 'standard';
+      if (coupon.percent_off === 100) {
+        newPlan = 'vip';
+      } else if (coupon.amount_off > 0 || coupon.percent_off > 0) {
+        newPlan = 'friends';
+      }
+
+      await sql`UPDATE licenses SET promo_code = ${promoCode.toUpperCase()}, plan = ${newPlan} WHERE id = ${license.id}`;
 
       let discountMsg = '';
       if (coupon.percent_off === 100) {
         discountMsg = '無料';
       } else if (coupon.amount_off) {
-        discountMsg = '¥' + (coupon.amount_off / 100) + '引き';
+        discountMsg = '¥' + coupon.amount_off + '引き';
       } else if (coupon.percent_off) {
         discountMsg = coupon.percent_off + '%引き';
       }
 
+      let planLabel = 'スタンダード';
+      if (newPlan === 'vip') planLabel = 'VIP（無料）';
+      else if (newPlan === 'friends') planLabel = 'FRIENDS';
+
       return res.status(200).json({
         success: true,
-        message: 'コードを保存しました！サブスク開始時に' + discountMsg + 'が適用されます'
+        message: 'コードが適用されました！プラン: ' + planLabel + '（サブスク開始時に' + discountMsg + 'が適用されます）'
       });
     }
 
