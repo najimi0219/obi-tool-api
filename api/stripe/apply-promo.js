@@ -57,7 +57,12 @@ module.exports = async function handler(req, res) {
         newPlan = 'friends';
       }
 
-      await sql`UPDATE licenses SET promo_code = ${promoCode.toUpperCase()}, plan = ${newPlan} WHERE id = ${license.id}`;
+      // VIPは無料プランなのでstatusもactiveにする（サブスク不要）
+      if (newPlan === 'vip') {
+        await sql`UPDATE licenses SET promo_code = ${promoCode.toUpperCase()}, plan = ${newPlan}, status = 'active' WHERE id = ${license.id}`;
+      } else {
+        await sql`UPDATE licenses SET promo_code = ${promoCode.toUpperCase()}, plan = ${newPlan} WHERE id = ${license.id}`;
+      }
 
       let discountMsg = '';
       if (coupon.percent_off === 100) {

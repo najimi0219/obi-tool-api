@@ -48,6 +48,22 @@ module.exports = async function handler(req, res) {
     // ステータスチェック
     const now = new Date();
 
+    // VIPプラン（100%割引）はサブスク不要 → 常にactive扱い
+    if (license.plan === 'vip') {
+      if (license.status !== 'active') {
+        await sql`UPDATE licenses SET status = 'active' WHERE id = ${license.id}`;
+      }
+      return res.status(200).json({
+        success: true,
+        license: {
+          status: 'active',
+          plan: 'vip',
+          trialEnd: null,
+          currentPeriodEnd: null
+        }
+      });
+    }
+
     // トライアル期限
     if (license.status === 'trial' && license.trial_end) {
       if (now > new Date(license.trial_end)) {
